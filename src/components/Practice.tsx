@@ -221,6 +221,7 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
   const [toast, setToast] = useState('')
   const toastTimer = useRef<number | undefined>(undefined)
   const mistakeSnapshot = useRef<MistakeEntry[]>(mistakes.entries)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const items = useMemo<PracticeItem[]>(() => {
     if (mode === 'chars') return charItems(charsOfTier(opts.tier))
@@ -253,10 +254,16 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
   }, [])
 
   // 物理键盘输入
-  // 练习时占用键盘：捕获阶段拦截所有练习相关按键并 preventDefault，
-  // 防止字母/方向键改动下拉框、Space/Enter 误触聚焦按钮、Tab 跳焦点、
-  // 方向键/翻页键滚动页面、引号与斜杠触发 Firefox 快捷查找等冲突。
-  // 带 Modifier（meta/ctrl/alt）的组合键不拦截，系统与浏览器快捷键照常可用。
+  // 核心思路：打字发生在真实输入框里，焦点锁定在输入框，按键天然被浏览器当作
+  // 文本输入，不会触发页面其它行为。
+  // - 字母键：焦点在输入框时放行，由 onChange 消费；焦点不在时接管（拦截 +
+  //   聚焦输入框 + 直接计键），保证下拉框等控件永远不会吃掉按键。
+  // - Space/Esc：捕获阶段拦截并 preventDefault（朗读 / 重打），输入框里不会
+  //   出现空格。
+  // - Tab/方向键/翻页键/引号等：吞掉默认行为，防止焦点跳出输入框、页面滚动、
+  //   快捷查找。
+  // - 带 Modifier（meta/ctrl/alt）的组合键不拦截；输入法组词（isComposing）
+  //   的按键不处理。
   useEffect(() => {
     const swallow = new Set([
       'Tab',
@@ -280,7 +287,9 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
       // 系统级快捷键（Cmd/Ctrl/Alt 组合）不占用
       if (e.metaKey || e.ctrlKey || e.altKey) return
       if (/^[a-zA-Z]$/.test(e.key)) {
+        if (document.activeElement === inputRef.current) return // 放行，onChange 消费
         e.preventDefault()
+        inputRef.current?.focus()
         if (settings.sound) sfx.key()
         dispatch({ type: 'input', key: e.key.toLowerCase(), items, random })
         return
@@ -301,6 +310,29 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
     window.addEventListener('keydown', onKey, true)
     return () => window.removeEventListener('keydown', onKey, true)
   }, [items, random, settings.sound, item])
+
+  // 输入框内容消费：只取字母作为打字输入，其余字符忽略并立即清空
+  const onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value
+    e.target.value = ''
+    for (const ch of raw) {
+      const lower = ch.toLowerCase()
+      if (lower >= 'a' && lower <= 'z') {
+        if (settings.sound) sfx.key()
+        dispatch({ type: 'input', key: lower, items, random })
+      }
+    }
+  }
+
+  // 桌面端：进入练习页与窗口回到前台时，把焦点放回输入框（触屏设备不自动聚焦，
+  // 避免弹出软键盘，点按虚拟键盘即可练习）
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches) return
+    inputRef.current?.focus()
+    const onFocus = () => inputRef.current?.focus()
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
+  }, [mode])
 
   // 出错反馈：音效 + 错字本
   const prevFlash = useRef(0)
@@ -447,7 +479,7 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
         )}
       </div>
 
-      <div className="stage">
+      <div className="stage" onClick={() => inputRef.current?.focus()}>
         {mode === 'chars' || mode === 'mistakes' || mode === 'codes' ? (
           <SingleStage
             piece={piece}
@@ -464,9 +496,24 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
         )}
       </div>
 
+      <div className="type-area">
+        <input
+          ref={inputRef}
+          className="type-input"
+          placeholder="在这里打字，焦点会一直锁在这里"
+          aria-label="双拼输入框"
+          autoComplete="off"
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck={false}
+          onChange={onTypeChange}
+        />
+        <span className="type-status">● 已占用键盘</span>
+      </div>
+
       <p className="key-hints">
         <kbd>Space</kbd> 朗读 · <kbd>Esc</kbd> 重打当前 · 请切换到英文输入法输入 ·
-        练习时键盘已占用，<kbd>⌘</kbd>/<kbd>Ctrl</kbd> 快捷键不受影响
+        <kbd>⌘</kbd>/<kbd>Ctrl</kbd> 快捷键不受影响
       </p>
 
       {settings.showKeyboard && (
