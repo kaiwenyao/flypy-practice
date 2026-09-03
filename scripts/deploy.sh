@@ -14,7 +14,8 @@ git add -A
 git -c user.name="${GIT_AUTHOR_NAME:-$(git config user.name)}" \
     -c user.email="${GIT_AUTHOR_EMAIL:-$(git config user.email)}" \
     commit -m "deploy: build $(date +%Y-%m-%d\ %H:%M)"
-git push origin gh-pages
+# gh-pages 分支只承载构建产物，每次从当前 main 重建，因此用 force push
+git push --force origin gh-pages
 cd - >/dev/null
 git worktree remove "$worktree" --force
 echo "✓ 已发布到 gh-pages，稍候可在 https://kaiwenyao.github.io/flypy-practice/ 查看"
