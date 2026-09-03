@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "check-data": "tsx scripts/check-data.ts"
+    "check-data": "tsx scripts/check-data.ts",
+    "deploy:site": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "react": "^19.2.8",

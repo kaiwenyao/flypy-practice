@@ -36,9 +36,19 @@ pnpm preview        # 本地预览构建产物
 
 ## 部署
 
-推送到 `main` 分支后，[GitHub Actions](.github/workflows/deploy.yml) 自动执行：安装依赖（pnpm）→ 数据校验 → 构建 → 部署到 GitHub Pages。
+网站通过 **GitHub Pages（gh-pages 分支）** 发布，站点地址 `https://kaiwenyao.github.io/flypy-practice/`。
 
-在仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions** 即可启用。
+更新网站：
+
+```bash
+pnpm deploy:site   # = 构建 + 把 dist/ 发布到 gh-pages 分支（见 scripts/deploy.sh）
+```
+
+仓库同时保留了 GitHub Actions 自动部署的 workflow 模板（`docs/github-pages-workflow.yml.example`）：将其移回 `.github/workflows/deploy.yml` 并在 Settings → Pages → Source 选择 **GitHub Actions** 即可切换为 CI 自动部署。
+
+## 与原站（ulpb.app）的差异
+
+本站复刻了原站的核心练习能力：四种练习模式、虚拟键盘与遮盖、快捷开关、连击与速度统计、错字本、教程与键位表。排行榜、账号系统、联网打字游戏依赖服务端，不在本站的复刻范围内；所有进度保存在浏览器本地。
 
 ## 项目结构
 
