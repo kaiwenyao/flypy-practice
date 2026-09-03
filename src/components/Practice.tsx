@@ -253,26 +253,53 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
   }, [])
 
   // 物理键盘输入
+  // 练习时占用键盘：捕获阶段拦截所有练习相关按键并 preventDefault，
+  // 防止字母/方向键改动下拉框、Space/Enter 误触聚焦按钮、Tab 跳焦点、
+  // 方向键/翻页键滚动页面、引号与斜杠触发 Firefox 快捷查找等冲突。
+  // 带 Modifier（meta/ctrl/alt）的组合键不拦截，系统与浏览器快捷键照常可用。
   useEffect(() => {
+    const swallow = new Set([
+      'Tab',
+      'Enter',
+      'Backspace',
+      'ArrowUp',
+      'ArrowDown',
+      'ArrowLeft',
+      'ArrowRight',
+      'PageUp',
+      'PageDown',
+      'Home',
+      'End',
+      "'",
+      '/',
+      '`',
+    ])
     const onKey = (e: KeyboardEvent) => {
+      // 输入法组词中的按键不处理（提示用户切英文输入法）
+      if (e.isComposing || e.keyCode === 229) return
+      // 系统级快捷键（Cmd/Ctrl/Alt 组合）不占用
       if (e.metaKey || e.ctrlKey || e.altKey) return
+      if (/^[a-zA-Z]$/.test(e.key)) {
+        e.preventDefault()
+        if (settings.sound) sfx.key()
+        dispatch({ type: 'input', key: e.key.toLowerCase(), items, random })
+        return
+      }
       if (e.key === ' ') {
         e.preventDefault()
         if (item) speak(item.speakText)
         return
       }
       if (e.key === 'Escape') {
+        e.preventDefault()
         dispatch({ type: 'resetItem' })
         return
       }
-      if (/^[a-zA-Z]$/.test(e.key)) {
-        e.preventDefault()
-        if (settings.sound) sfx.key()
-        dispatch({ type: 'input', key: e.key.toLowerCase(), items, random })
-      }
+      // 其余按键只吞掉默认行为（焦点移动 / 滚动 / 快捷查找），不产生输入
+      if (swallow.has(e.key)) e.preventDefault()
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
   }, [items, random, settings.sound, item])
 
   // 出错反馈：音效 + 错字本
@@ -438,7 +465,8 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
       </div>
 
       <p className="key-hints">
-        <kbd>Space</kbd> 朗读 · <kbd>Esc</kbd> 重打当前 · 请切换到英文输入法输入
+        <kbd>Space</kbd> 朗读 · <kbd>Esc</kbd> 重打当前 · 请切换到英文输入法输入 ·
+        练习时键盘已占用，<kbd>⌘</kbd>/<kbd>Ctrl</kbd> 快捷键不受影响
       </p>
 
       {settings.showKeyboard && (

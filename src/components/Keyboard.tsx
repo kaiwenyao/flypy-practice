@@ -23,7 +23,11 @@ export function Keyboard({ highlight, covered, onKey, onUncover }: Props) {
                   className={
                     'kb-key' + (highlight === k ? ' is-hint' : '') + (info.initial ? ' has-initial' : '')
                   }
-                  onClick={() => onKey?.(k)}
+                  onClick={(e) => {
+                    // 不保留焦点，避免后续 Space/Enter 误触按键
+                    e.currentTarget.blur()
+                    onKey?.(k)
+                  }}
                   tabIndex={-1}
                   aria-label={`键 ${k}`}
                 >

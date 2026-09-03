@@ -1,0 +1,166 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "鹤 小鹤双拼练习 flypy practice" [ref=e6] [cursor=pointer]:
+        - /url: "#"
+        - generic [ref=e7]: 鹤
+        - generic [ref=e8]:
+          - text: 小鹤双拼练习
+          - generic [ref=e9]: flypy practice
+      - navigation [ref=e10]:
+        - button "单字练习" [ref=e11] [cursor=pointer]
+        - button "编码练习" [ref=e12] [cursor=pointer]
+        - button "词组练习" [ref=e13] [cursor=pointer]
+        - button "文章练习" [ref=e14] [cursor=pointer]
+        - button "键位表" [ref=e15] [cursor=pointer]
+        - button "教程" [ref=e16] [cursor=pointer]
+        - button "错字本" [ref=e17] [cursor=pointer]
+      - generic [ref=e18]:
+        - button "◐" [ref=e19] [cursor=pointer]
+        - button "☀" [ref=e20] [cursor=pointer]
+        - button "☾" [ref=e21] [cursor=pointer]
+  - generic [ref=e22]:
+    - generic [ref=e23]: 💡
+    - generic [ref=e24]: 打错的字会自动进入错字本，针对性练习更高效。
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - emphasis [ref=e29]: "0"
+          - text: 已练
+        - generic [ref=e30]:
+          - emphasis [ref=e31]: "0"
+          - text: 连击
+        - generic [ref=e32]:
+          - emphasis [ref=e33]: "0"
+          - text: 最佳
+        - generic [ref=e34]:
+          - emphasis [ref=e35]: 100%
+          - text: 准确率
+        - generic [ref=e36]:
+          - emphasis [ref=e37]: "0"
+          - generic [ref=e38]: 字/分
+        - generic [ref=e39]:
+          - emphasis [ref=e40]: "0"
+          - text: 键/分
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]: 字库
+          - combobox "字库" [ref=e44]:
+            - option "常用字 100" [selected]
+            - option "常用字 300"
+            - option "常用字 500"
+        - generic [ref=e45]:
+          - generic [ref=e46]: 顺序
+          - combobox "顺序" [ref=e47]:
+            - option "顺序" [selected]
+            - option "随机"
+        - button "↺ 重来" [ref=e48] [cursor=pointer]
+      - generic [ref=e49]:
+        - button "拼音提示" [ref=e50] [cursor=pointer]
+        - button "键帽提示" [ref=e51] [cursor=pointer]
+        - button "键盘" [ref=e52] [cursor=pointer]
+        - button "声音" [ref=e53] [cursor=pointer]
+        - button "闭眼" [ref=e54] [cursor=pointer]
+        - button "遮盖" [ref=e55] [cursor=pointer]
+      - generic [ref=e57]:
+        - generic [ref=e58]: de
+        - generic [ref=e59]: 的
+        - generic [ref=e60]:
+          - generic [ref=e61]: d
+          - generic [ref=e62]: e
+        - generic [ref=e63]: 1/100
+      - paragraph [ref=e64]: Space 朗读 · Esc 重打当前 · 请切换到英文输入法输入 · 练习时键盘已占用，⌘/Ctrl 快捷键不受影响
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - button "键 q" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]: Q
+              - generic [ref=e70]: iu
+            - button "键 w" [ref=e71] [cursor=pointer]:
+              - generic [ref=e72]: W
+              - generic [ref=e73]: ei
+            - button "键 e" [ref=e74] [cursor=pointer]:
+              - generic [ref=e75]: E
+              - generic [ref=e76]: e
+            - button "键 r" [ref=e77] [cursor=pointer]:
+              - generic [ref=e78]: R
+              - generic [ref=e79]: uan
+            - button "键 t" [ref=e80] [cursor=pointer]:
+              - generic [ref=e81]: T
+              - generic [ref=e82]: ue ve
+            - button "键 y" [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: "Y"
+              - generic [ref=e85]: un vn
+            - button "键 u" [ref=e86] [cursor=pointer]:
+              - generic [ref=e87]: sh
+              - generic [ref=e88]: U
+              - generic [ref=e89]: u
+            - button "键 i" [ref=e90] [cursor=pointer]:
+              - generic [ref=e91]: ch
+              - generic [ref=e92]: I
+              - generic [ref=e93]: i
+            - button "键 o" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: O
+              - generic [ref=e96]: o uo
+            - button "键 p" [ref=e97] [cursor=pointer]:
+              - generic [ref=e98]: P
+              - generic [ref=e99]: ie
+          - generic [ref=e100]:
+            - button "键 a" [ref=e101] [cursor=pointer]:
+              - generic [ref=e102]: A
+              - generic [ref=e103]: a
+            - button "键 s" [ref=e104] [cursor=pointer]:
+              - generic [ref=e105]: S
+              - generic [ref=e106]: ong iong
+            - button "键 d" [ref=e107] [cursor=pointer]:
+              - generic [ref=e108]: D
+              - generic [ref=e109]: ai
+            - button "键 f" [ref=e110] [cursor=pointer]:
+              - generic [ref=e111]: F
+              - generic [ref=e112]: en
+            - button "键 g" [ref=e113] [cursor=pointer]:
+              - generic [ref=e114]: G
+              - generic [ref=e115]: eng
+            - button "键 h" [ref=e116] [cursor=pointer]:
+              - generic [ref=e117]: H
+              - generic [ref=e118]: ang
+            - button "键 j" [ref=e119] [cursor=pointer]:
+              - generic [ref=e120]: J
+              - generic [ref=e121]: an
+            - button "键 k" [ref=e122] [cursor=pointer]:
+              - generic [ref=e123]: K
+              - generic [ref=e124]: ing uai
+            - button "键 l" [ref=e125] [cursor=pointer]:
+              - generic [ref=e126]: L
+              - generic [ref=e127]: iang uang
+          - generic [ref=e128]:
+            - button "键 z" [ref=e129] [cursor=pointer]:
+              - generic [ref=e130]: Z
+              - generic [ref=e131]: ou
+            - button "键 x" [ref=e132] [cursor=pointer]:
+              - generic [ref=e133]: X
+              - generic [ref=e134]: ia ua
+            - button "键 c" [ref=e135] [cursor=pointer]:
+              - generic [ref=e136]: C
+              - generic [ref=e137]: ao
+            - button "键 v" [ref=e138] [cursor=pointer]:
+              - generic [ref=e139]: zh
+              - generic [ref=e140]: V
+              - generic [ref=e141]: ui v
+            - button "键 b" [ref=e142] [cursor=pointer]:
+              - generic [ref=e143]: B
+              - generic [ref=e144]: in
+            - button "键 n" [ref=e145] [cursor=pointer]:
+              - generic [ref=e146]: "N"
+              - generic [ref=e147]: iao
+            - button "键 m" [ref=e148] [cursor=pointer]:
+              - generic [ref=e149]: M
+              - generic [ref=e150]: ian
+        - generic [ref=e151]:
+          - generic [ref=e152]: 声母
+          - generic [ref=e154]: 韵母
+          - generic [ref=e156]: 下一键位
+  - contentinfo [ref=e158]:
+    - paragraph [ref=e159]: 开源小鹤双拼练习站 · 进度保存在本地浏览器 · 数据不出设备
+    - paragraph [ref=e160]: 键位表速查 · 错字本自动收集 · Space 朗读 / Esc 重打
