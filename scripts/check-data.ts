@@ -1,7 +1,7 @@
 // 数据校验：pnpm check-data
-// 验证音节字典抽查值 + 字/词/文章数据的每个拼音都能解析出合法双拼编码
+// 验证音节字典抽查值 + 全表规则推导一致性 + 字/词/文章数据的每个拼音都能解析出合法双拼编码
 import { CHARS, CHAR_TIERS, WORDS, WORD_TIERS, ARTICLES } from '../src/lib/data'
-import { flypyCode, ALL_SYLLABLES } from '../src/lib/flypy'
+import { flypyCode, ALL_SYLLABLES, SYLLABLE_CODES, FINAL_KEYS, INITIAL_KEYS } from '../src/lib/flypy'
 
 let failed = 0
 function expect(code: string | null, want: string, label: string) {
@@ -15,10 +15,10 @@ function expect(code: string | null, want: string, label: string) {
 expect(flypyCode('shuang'), 'ul', '双 shuang')
 expect(flypyCode('pin'), 'pb', '拼 pin')
 expect(flypyCode('zhuan'), 'vr', '专 zhuan')
-expect(flypyCode('yang'), 'yl', '样 yang')
-expect(flypyCode('wan'), 'wr', '弯 wan')
-expect(flypyCode('yu'), 'yv', '雨 yu')
-expect(flypyCode('ju'), 'jv', '句 ju')
+expect(flypyCode('yang'), 'yh', '样 yang')
+expect(flypyCode('wan'), 'wj', '弯 wan')
+expect(flypyCode('yu'), 'yu', '雨 yu')
+expect(flypyCode('ju'), 'ju', '句 ju')
 expect(flypyCode('ai'), 'ad', '爱 ai')
 expect(flypyCode('ou'), 'oz', '欧 ou')
 expect(flypyCode('er'), 'er', '二 er')
@@ -28,6 +28,52 @@ expect(flypyCode('shui'), 'uv', '水 shui')
 expect(flypyCode('niang'), 'nl', '娘 niang')
 expect(flypyCode('yo'), 'yo', '哟 yo')
 expect(flypyCode('den'), 'df', '嗯 den')
+expect(flypyCode('nv'), 'nv', '女 nv')
+expect(flypyCode('lv'), 'lv', '绿 lv')
+expect(flypyCode('rang'), 'rh', '让 rang')
+
+// y/w 开头的音节：y/w 作声母，其余字母按书写形式取韵母键
+expect(flypyCode('you'), 'yz', '有 you')
+expect(flypyCode('yan'), 'yj', '烟 yan')
+expect(flypyCode('yang'), 'yh', '央 yang')
+expect(flypyCode('yao'), 'yc', '要 yao')
+expect(flypyCode('ya'), 'ya', '压 ya')
+expect(flypyCode('ye'), 'ye', '也 ye')
+expect(flypyCode('wa'), 'wa', '蛙 wa')
+expect(flypyCode('wai'), 'wd', '外 wai')
+expect(flypyCode('wan'), 'wj', '弯 wan')
+expect(flypyCode('wang'), 'wh', '王 wang')
+
+// 全表规则推导校验：每个音节的编码必须等于「声母键 + 书写韵母键」机械推导的结果
+const SINGLE_INITIALS = 'bpmfdtnlgkhjqxrzcsyw'
+function ruleCode(s: string): string | null {
+  // 零声母 a/e/o 行：首字母 + 韵母键，er 除外
+  if (/^(a|ai|an|ang|ao|e|ei|en|eng|er|o|ou)$/.test(s)) {
+    if (s === 'er') return 'er'
+    return s[0] + (FINAL_KEYS[s] ?? '')
+  }
+  let initial: string
+  let rest: string
+  if (/^(zh|ch|sh)/.test(s)) {
+    initial = INITIAL_KEYS[s.slice(0, 2)]
+    rest = s.slice(2)
+  } else if (s.length > 1 && SINGLE_INITIALS.includes(s[0])) {
+    initial = s[0]
+    rest = s.slice(1)
+  } else {
+    return null
+  }
+  if (!initial || !rest) return null
+  const key = FINAL_KEYS[rest]
+  return key ? initial + key : null
+}
+for (const [syl, code] of Object.entries(SYLLABLE_CODES)) {
+  const want = ruleCode(syl)
+  if (want !== code) {
+    console.error(`✗ 音节 ${syl}: 表内编码 ${code}，按规则应为 ${want}`)
+    failed++
+  }
+}
 
 // 数据完整性
 if (CHARS.length < 500) {

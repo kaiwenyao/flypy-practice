@@ -29,7 +29,10 @@ export function Scheme() {
         </div>
         <div className="rule-card">
           <h3>零声母音节</h3>
-          <p>没有声母的音节：先打首字母，再打韵母键。</p>
+          <p>
+            没有声母的音节：先打首字母，再打韵母键。y/w 开头的音节把 y/w 当声母，
+            后面的字母按韵母取键（如 you 是 y + ou，不是 y + iu）。
+          </p>
           <ul className="zero-list">
             {Object.entries(ZERO_INITIAL).map(([syl, code]) => (
               <li key={syl}>
@@ -77,6 +80,15 @@ export function Scheme() {
           </li>
           <li>
             爱 ai（零声母）= a + ai(<code>d</code>) → <code>ad</code>
+          </li>
+          <li>
+            有 you（零声母）= y + ou(<code>z</code>) → <code>yz</code>
+          </li>
+          <li>
+            王 wang（零声母）= w + ang(<code>h</code>) → <code>wh</code>
+          </li>
+          <li>
+            句 ju = j + u(<code>u</code>) → <code>ju</code>（j/q/x/y 后的 u 就按 u 键，只有 nv、lv 这类写作 v 的才用 v 键）
           </li>
         </ul>
       </div>

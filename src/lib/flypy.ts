@@ -2,6 +2,9 @@
 // 声母规则：zh→v  ch→i  sh→u，其余声母取原字母
 // 韵母规则：每个韵母映射到一个键（见 FINAL_KEYS）
 // 零声母音节（a/ai/an/...）：首字母 + 韵母键，如 ai→ad、ou→oz、er→er
+// y/w 开头的音节把 y/w 当声母，其余字母按书写形式取韵母键：
+// you→y+ou→yz（不是 y+iu→yq）、yan→yj、wang→wh；同理 ju/qu/xu/yu 保持 u 键、ye 用 e 键；
+// 书写形式为 v 的 ü（仅 nv、lv）才用 v 键
 
 /** 单韵母/复韵母 → 键位 */
 export const FINAL_KEYS: Record<string, string> = {
@@ -39,18 +42,18 @@ la=la lai=ld lan=lj lang=lh lao=lc le=le lei=lw leng=lg li=li lia=lx lian=lm lia
 ga=ga gai=gd gan=gj gang=gh gao=gc ge=ge gei=gw gen=gf geng=gg gong=gs gou=gz gu=gu gua=gx guai=gk guan=gr guang=gl gui=gv gun=gy guo=go
 ka=ka kai=kd kan=kj kang=kh kao=kc ke=ke kei=kw ken=kf keng=kg kong=ks kou=kz ku=ku kua=kx kuai=kk kuan=kr kuang=kl kui=kv kun=ky kuo=ko
 ha=ha hai=hd han=hj hang=hh hao=hc he=he hei=hw hen=hf heng=hg hong=hs hou=hz hu=hu hua=hx huai=hk huan=hr huang=hl hui=hv hun=hy huo=ho
-ji=ji jia=jx jian=jm jiang=jl jiao=jn jie=jp jin=jb jing=jk jiong=js jiu=jq ju=jv juan=jr jue=jt jun=jy
-qi=qi qia=qx qian=qm qiang=ql qiao=qn qie=qp qin=qb qing=qk qiong=qs qiu=qq qu=qv quan=qr que=qt qun=qy
-xi=xi xia=xx xian=xm xiang=xl xiao=xn xie=xp xin=xb xing=xk xiong=xs xiu=xq xu=xv xuan=xr xue=xt xun=xy
-ran=rj rang=rl rao=rc re=re rei=rw ren=rf reng=rg ri=ri rong=rs rou=rz ru=ru rua=rx ruan=rr rui=rv run=ry ruo=ro
+ji=ji jia=jx jian=jm jiang=jl jiao=jn jie=jp jin=jb jing=jk jiong=js jiu=jq ju=ju juan=jr jue=jt jun=jy
+qi=qi qia=qx qian=qm qiang=ql qiao=qn qie=qp qin=qb qing=qk qiong=qs qiu=qq qu=qu quan=qr que=qt qun=qy
+xi=xi xia=xx xian=xm xiang=xl xiao=xn xie=xp xin=xb xing=xk xiong=xs xiu=xq xu=xu xuan=xr xue=xt xun=xy
+ran=rj rang=rh rao=rc re=re rei=rw ren=rf reng=rg ri=ri rong=rs rou=rz ru=ru rua=rx ruan=rr rui=rv run=ry ruo=ro
 za=za zai=zd zan=zj zang=zh zao=zc ze=ze zei=zw zen=zf zeng=zg zi=zi zong=zs zou=zz zu=zu zuan=zr zui=zv zun=zy zuo=zo
 ca=ca cai=cd can=cj cang=ch cao=cc ce=ce cen=cf ceng=cg ci=ci cong=cs cou=cz cu=cu cuan=cr cui=cv cun=cy cuo=co
 sa=sa sai=sd san=sj sang=sh sao=sc se=se sen=sf seng=sg si=si song=ss sou=sz su=su suan=sr sui=sv sun=sy suo=so
-zha=va zhai=vd zhan=vj zhang=vh zhao=vc zhe=ve zhen=vf zheng=vg zhi=vi zhong=vs zhou=vz zhu=vu zhua=vx zhuai=vk zhuan=vr zhuang=vl zhui=vv zhun=vy zhuo=vo
+zha=va zhai=vd zhan=vj zhang=vh zhao=vc zhe=ve zhei=vw zhen=vf zheng=vg zhi=vi zhong=vs zhou=vz zhu=vu zhua=vx zhuai=vk zhuan=vr zhuang=vl zhui=vv zhun=vy zhuo=vo
 cha=ia chai=id chan=ij chang=ih chao=ic che=ie chen=if cheng=ig chi=ii chong=is chou=iz chu=iu chua=ix chuai=ik chuan=ir chuang=il chui=iv chun=iy chuo=io
 sha=ua shai=ud shan=uj shang=uh shao=uc she=ue shei=uw shen=uf sheng=ug shi=ui shou=uz shu=uu shua=ux shuai=uk shuan=ur shuang=ul shui=uv shun=uy shuo=uo
-ya=yx yan=ym yang=yl yao=yn ye=yp yi=yi yin=yb ying=yk yo=yo yong=ys you=yq yu=yv yuan=yr yue=yt yun=yy
-wa=wx wai=wk wan=wr wang=wl wei=ww wen=wf weng=wg wo=wo wu=wu
+ya=ya yan=yj yang=yh yao=yc ye=ye yi=yi yin=yb ying=yk yo=yo yong=ys you=yz yu=yu yuan=yr yue=yt yun=yy
+wa=wa wai=wd wan=wj wang=wh wei=ww wen=wf weng=wg wo=wo wu=wu
 `
 
 export const SYLLABLE_CODES: Record<string, string> = (() => {
