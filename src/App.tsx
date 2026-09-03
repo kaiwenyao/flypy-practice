@@ -117,6 +117,7 @@ export default function App() {
           />
         ) : (
           <Practice
+            key={tab === 'mistakes-practice' ? 'mistakes' : (tab as PracticeMode)}
             mode={tab === 'mistakes-practice' ? 'mistakes' : (tab as PracticeMode)}
             settings={settings}
             onSettings={patchSettings}

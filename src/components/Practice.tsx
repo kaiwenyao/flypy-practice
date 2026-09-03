@@ -94,7 +94,7 @@ type State = {
 }
 
 type Action =
-  | { type: 'input'; key: string; items: PracticeItem[]; random: boolean }
+  | { type: 'input'; key: string; items: PracticeItem[]; random: boolean; perItem?: boolean }
   | { type: 'rebuild'; items: PracticeItem[]; random: boolean }
   | { type: 'resetSession'; items: PracticeItem[]; random: boolean }
   | { type: 'resetItem' }
@@ -130,9 +130,15 @@ function nextCodePiece(pieces: Piece[], from: number): number {
 function reducer(s: State, action: Action): State {
   switch (action.type) {
     case 'rebuild':
-      return initState(action.items.length, action.random)
     case 'resetSession':
-      return initState(action.items.length, action.random)
+      // 重建会话（换字库/词库/文章、切顺序、重来）时保留 flash 与 completed：
+      // 二者是跨会话单调递增的计数，副作用按增量结算错误反馈与累计统计；
+      // 若在此归零，重建前后的差值会出错（统计倒扣、幻影错字）
+      return {
+        ...initState(action.items.length, action.random),
+        flash: s.flash,
+        completed: s.completed,
+      }
     case 'resetItem':
       return { ...s, pieceIdx: 0, keyIdx: 0 }
     case 'input': {
@@ -153,9 +159,11 @@ function reducer(s: State, action: Action): State {
         const keyIdx = s.keyIdx + 1
         if (keyIdx < piece.code.length) return { ...base, correct, keyIdx }
         // 当前字完成
-        const chars = s.chars + (piece.hanzi ? 1 : 0)
         const nextPi = nextCodePiece(item.pieces, pi + 1)
-        if (nextPi < item.pieces.length) {
+        const itemDone = nextPi >= item.pieces.length
+        // 速度计数：默认每完成一个字/音节 +1；词组模式整词完成才 +1（对应「词/分」）
+        const chars = s.chars + (action.perItem && !itemDone ? 0 : 1)
+        if (!itemDone) {
           return { ...base, correct, keyIdx: 0, pieceIdx: nextPi, chars }
         }
         // 条目完成，进入下一条（随机模式换洗牌顺序）
@@ -291,7 +299,7 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
         e.preventDefault()
         inputRef.current?.focus()
         if (settings.sound) sfx.key()
-        dispatch({ type: 'input', key: e.key.toLowerCase(), items, random })
+        dispatch({ type: 'input', key: e.key.toLowerCase(), items, random, perItem: mode === 'words' })
         return
       }
       if (e.key === ' ') {
@@ -309,7 +317,7 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
     }
     window.addEventListener('keydown', onKey, true)
     return () => window.removeEventListener('keydown', onKey, true)
-  }, [items, random, settings.sound, item])
+  }, [items, random, settings.sound, item, mode])
 
   // 输入框内容消费：只取字母作为打字输入，其余字符忽略并立即清空
   const onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -319,7 +327,7 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
       const lower = ch.toLowerCase()
       if (lower >= 'a' && lower <= 'z') {
         if (settings.sound) sfx.key()
-        dispatch({ type: 'input', key: lower, items, random })
+        dispatch({ type: 'input', key: lower, items, random, perItem: mode === 'words' })
       }
     }
   }
@@ -367,7 +375,7 @@ export function Practice({ mode, settings, onSettings, mistakes }: Props) {
   // 虚拟键盘点击输入
   const virtualKey = (k: string) => {
     if (settings.sound) sfx.key()
-    dispatch({ type: 'input', key: k, items, random })
+    dispatch({ type: 'input', key: k, items, random, perItem: mode === 'words' })
   }
 
   const minutes = state.startedAt ? (now - state.startedAt) / 60000 : 0
