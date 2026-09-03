@@ -8,7 +8,7 @@
 
 - **四种练习模式**
   - 单字练习：看汉字打双拼，内置 常用字 100 / 300 / 500 三档字库
-  - 编码练习：看全拼音节打双拼编码（覆盖 412 个普通话音节）
+  - 编码练习：看全拼音节打双拼编码（覆盖 413 个普通话音节）
   - 词组练习：常用词 20 / 60 / 全部 187 词
   - 文章练习：4 篇原创短文，逐字流式输入
 - **练习辅助**
@@ -37,15 +37,9 @@ pnpm preview        # 本地预览构建产物
 
 ## 部署
 
-网站通过 **GitHub Pages（gh-pages 分支）** 发布，站点地址 `https://kaiwenyao.github.io/flypy-practice/`。
+网站通过 **GitHub Actions** 自动部署到 GitHub Pages：push 到 `main`（或手动触发 workflow）即自动执行 数据校验 → 构建 → 发布，站点地址 `https://kaiwenyao.github.io/flypy-practice/`，无需本地构建。
 
-更新网站：
-
-```bash
-pnpm deploy:site   # = 构建 + 把 dist/ 发布到 gh-pages 分支（见 scripts/deploy.sh）
-```
-
-仓库同时保留了 GitHub Actions 自动部署的 workflow 模板（`docs/github-pages-workflow.yml.example`）：将其移回 `.github/workflows/deploy.yml` 并在 Settings → Pages → Source 选择 **GitHub Actions** 即可切换为 CI 自动部署。
+首次启用需在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**（已配置则无需操作）。workflow 定义见 [.github/workflows/deploy.yml](.github/workflows/deploy.yml)。
 
 ## 与原站（ulpb.app）的差异
 
